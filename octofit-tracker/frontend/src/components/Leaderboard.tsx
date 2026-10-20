@@ -15,7 +15,7 @@ export default function Leaderboard() {
     {state.status === 'success' && (state.data.leaderboard.length
       ? <ol className="list-group list-group-numbered">{state.data.leaderboard.map((entry) =>
         <li className="list-group-item d-flex justify-content-between" key={entry.rank}>
-          <span>{entry.teamName}</span><strong>{entry.totalPoints} points</strong>
+          <span>Rank {entry.rank}: {entry.teamName}</span><strong>{entry.totalPoints} points</strong>
         </li>)}</ol>
       : <p>No rankings yet.</p>)}
   </CapabilityCard>;
