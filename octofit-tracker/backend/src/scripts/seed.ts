@@ -29,14 +29,26 @@ export async function seed() {
       { $set: { name: 'Robocats', mascot: 'Hubot' } },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
+    const trailblazers = await Team.findOneAndUpdate(
+      { name: 'Trailblazers' },
+      { $set: { name: 'Trailblazers', mascot: 'Ari' } },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
     const mona = await upsertDemoUser('Mona', 'mona@example.com', octocats._id, 'endurance');
     const hubot = await upsertDemoUser('Hubot', 'hubot@example.com', robocats._id, 'strength');
+    const ari = await upsertDemoUser('Ari', 'ari@example.com', trailblazers._id, 'mobility');
 
     const monaRunAt = new Date('2026-01-10T12:00:00.000Z');
     const hubotCycleAt = new Date('2026-01-11T12:00:00.000Z');
+    const ariWalkAt = new Date('2026-01-12T12:00:00.000Z');
     await Activity.updateOne(
       { user: mona._id, team: octocats._id, type: 'run', occurredAt: monaRunAt },
       { $set: { user: mona._id, team: octocats._id, type: 'run', minutes: 40, points: 40, occurredAt: monaRunAt } },
+      { upsert: true },
+    );
+    await Activity.updateOne(
+      { user: ari._id, team: trailblazers._id, type: 'walk', occurredAt: ariWalkAt },
+      { $set: { user: ari._id, team: trailblazers._id, type: 'walk', minutes: 20, points: 20, occurredAt: ariWalkAt } },
       { upsert: true },
     );
     await Activity.updateOne(
@@ -52,6 +64,11 @@ export async function seed() {
     await Workout.updateOne(
       { title: 'Strength Circuit' },
       { $set: { title: 'Strength Circuit', focus: 'strength', minutes: 30, difficulty: 'moderate' } },
+      { upsert: true },
+    );
+    await Workout.updateOne(
+      { title: 'Mobility Flow' },
+      { $set: { title: 'Mobility Flow', focus: 'mobility', minutes: 20, difficulty: 'easy' } },
       { upsert: true },
     );
   } finally {
